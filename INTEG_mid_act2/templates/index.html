@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Management</title>
+</head>
+<body>
+    <h1>Pet Management</h1>
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p style="color: {{ 'green' if category == 'success' else 'red' }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h2>Add Pet</h2>
+    <form action="/add" method="POST">
+        <input type="text" name="name" placeholder="Pet Name" required>
+        <input type="number" name="age" placeholder="Age" required>
+        <input type="text" name="species" placeholder="Species" required>
+        <input type="number" name="weight" step="0.1" placeholder="Weight (kg)" required>
+        <button type="submit">Add Pet</button>
+    </form>
+
+    <h2>Pet List</h2>
+    <ul>
+        {% for pet in pets %}
+            <li>
+                {{ pet.name }} - Age: {{ pet.age }} - Species: {{ pet.species }} - Weight: {{ pet.weight }} kg
+                <form action="/update/{{ pet.id }}" method="POST" style="display:inline;">
+                    <input type="text" name="name" value="{{ pet.name }}" required>
+                    <input type="number" name="age" value="{{ pet.age }}" required>
+                    <input type="text" name="species" value="{{ pet.species }}" required>
+                    <input type="number" name="weight" step="0.1" value="{{ pet.weight }}" required>
+                    <button type="submit">Update</button>
+                </form>
+                <form action="/delete/{{ pet.id }}" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="/logs">View Logs</a>
+</body>
+</html>
